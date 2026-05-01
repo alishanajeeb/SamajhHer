@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SamajhHer — History</title>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+  <style>
+    body { font-family:'Poppins',sans-serif; background:linear-gradient(135deg,#dce8f0 0%,#e8ddf0 50%,#f0e0e8 100%); min-height:100vh; margin:0; }
+    .page-wrap { max-width:1000px; margin:0 auto; padding:32px 20px 60px; }
+
+    .page-title { font-size:26px; font-weight:700; color:#1a1530; margin-bottom:4px; }
+    .page-title span { color:#d94f7a; }
+    .page-sub { font-size:14px; color:#9080a8; margin-bottom:32px; }
+
+    /* Tabs */
+    .tabs { display:flex; gap:8px; margin-bottom:28px; }
+    .tab {
+      font-size:13px; font-weight:600;
+      padding:8px 20px; border-radius:20px;
+      border:1.5px solid #e0d8f0;
+      color:#9080a8; background:#fff;
+      cursor:pointer; transition:all 0.2s;
+      font-family:'Poppins',sans-serif;
+    }
+    .tab.active { background:#d94f7a; color:#fff; border-color:#d94f7a; }
+    .tab:hover:not(.active) { background:#f8f4ff; border-color:#d0c0e8; }
+
+    /* History grid */
+    .history-grid { display:flex; flex-direction:column; gap:12px; }
+
+    /* Conversation card */
+    .conv-card {
+      background:#fff; border:1.5px solid #f0e8f8;
+      border-radius:16px; padding:18px 20px;
+      cursor:pointer; transition:all 0.25s;
+      display:flex; align-items:center; gap:16px;
+    }
+    .conv-card:hover {
+      border-color:#d94f7a;
+      transform:translateX(4px);
+      box-shadow:0 4px 20px rgba(217,79,122,0.1);
+    }
+    .conv-icon { font-size:28px; flex-shrink:0; }
+    .conv-info { flex:1; min-width:0; }
+    .conv-title {
+      font-size:14px; font-weight:600;
+      color:#1a1530; margin-bottom:4px;
+      white-space:nowrap; overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .conv-meta {
+      display:flex; align-items:center;
+      gap:10px; flex-wrap:wrap;
+    }
+    .conv-badge {
+      font-size:10px; font-weight:700;
+      padding:2px 10px; border-radius:20px;
+    }
+    .conv-badge.woman  { background:#fde8f0; color:#d94f7a; }
+    .conv-badge.family { background:#eeeaff; color:#5b4fcf; }
+    .conv-badge.doctor { background:#fff8ec; color:#c4956a; }
+    .conv-date { font-size:11px; color:#c0b0d0; }
+    .conv-lang { font-size:10px; color:#c0b0d0; }
+    .conv-msgs { font-size:12px; color:#9080a8; }
+    .conv-arrow { font-size:18px; color:#e0d0f0; flex-shrink:0; }
+    .conv-card:hover .conv-arrow { color:#d94f7a; }
+
+    /* Doctor card */
+    .card-item {
+      background:#fff; border:1.5px solid #f5e8d0;
+      border-radius:16px; padding:18px 20px;
+      cursor:pointer; transition:all 0.25s;
+      display:flex; align-items:center; gap:16px;
+    }
+    .card-item:hover {
+      border-color:#c4956a;
+      transform:translateX(4px);
+      box-shadow:0 4px 20px rgba(196,149,106,0.12);
+    }
+    .card-icon { font-size:28px; flex-shrink:0; }
+    .card-info { flex:1; min-width:0; }
+    .card-title {
+      font-size:14px; font-weight:600;
+      color:#1a1530; margin-bottom:4px;
+      white-space:nowrap; overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .card-meta { font-size:11px; color:#c0b0a0; }
+    .card-arrow { font-size:18px; color:#e0d8c8; flex-shrink:0; }
+    .card-item:hover .card-arrow { color:#c4956a; }
+
+    /* Delete button */
+    .btn-delete {
+      background:transparent; border:none;
+      color:#e0d0e0; font-size:16px;
+      cursor:pointer; padding:4px 8px;
+      border-radius:8px; transition:all 0.2s;
+      flex-shrink:0;
+    }
+    .btn-delete:hover { background:#fde8f0; color:#d94f7a; }
+
+    /* Empty state */
+    .empty-state {
+      text-align:center; padding:60px 20px;
+      color:#c0b0d0;
+    }
+    .empty-icon { font-size:48px; margin-bottom:16px; }
+    .empty-text {
+      font-size:14px; color:#c0b0d0;
+      margin-bottom:20px; line-height:1.7;
+    }
+    .btn-start {
+      background:#d94f7a; color:#fff;
+      border:none; border-radius:12px;
+      padding:12px 28px; font-size:14px;
+      font-weight:600; font-family:'Poppins',sans-serif;
+      cursor:pointer; transition:all 0.2s;
+    }
+    .btn-start:hover { background:#5b4fcf; }
+
+    /* Loading */
+    .loading {
+      text-align:center; padding:40px;
+      color:#c0b0d0; font-size:13px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav style="position:sticky;top:0;z-index:100;background:rgba(253,248,252,0.97);border-bottom:1px solid #f0e8f8;backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:64px;box-shadow:0 2px 16px rgba(180,120,160,0.06)">
+  <a href="/" style="font-size:18px;font-weight:700;color:#d94f7a;text-decoration:none">Samajh<span style="color:#5b4fcf">Her</span></a>
+  <div style="display:flex;gap:6px">
+    <a href="/woman"   style="font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;text-decoration:none;color:#9080a8">🧕 Kya Ho Raha Hai</a>
+    <a href="/family"  style="font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;text-decoration:none;color:#9080a8">👨‍👩‍👧 Family</a>
+    <a href="/doctor"  style="font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;text-decoration:none;color:#9080a8">🩺 Doctor</a>
+    <a href="/history" style="font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;text-decoration:none;color:#d94f7a;background:#fde8f0">📋 History</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span id="nav-user" style="font-size:13px;color:#5a4870;font-weight:500"></span>
+    <button onclick="logout()" style="font-size:12px;font-weight:600;background:transparent;border:1.5px solid #e8d0ec;color:#9080a8;border-radius:20px;padding:6px 16px;cursor:pointer">Logout</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-title">Aapki <span>History</span></div>
+  <div class="page-sub">Pichli baatein aur doctor cards — sab yahan mahfooz hain</div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('conversations', this)">💬 Conversations</button>
+    <button class="tab"        onclick="showTab('cards', this)">🩺 Doctor Cards</button>
+  </div>
+
+  <!-- Conversations tab -->
+  <div id="tab-conversations">
+    <div class="history-grid" id="convList">
+      <div class="loading">Loading...</div>
+    </div>
+  </div>
+
+  <!-- Doctor cards tab -->
+  <div id="tab-cards" style="display:none">
+    <div class="history-grid" id="cardList">
+      <div class="loading">Loading...</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="/static/js/api.js"></script>
+<script>
+requireAuth();
+setNavUser();
+
+const flowIcons = { woman:'🧕', family:'👨‍👩‍👧', doctor:'🩺' };
+const flowNames = {
+  woman:  'Kya Ho Raha Hai',
+  family: 'Ghar Walon Ko Samjhao',
+  doctor: 'Doctor Se Baat Karo'
+};
+const langNames = { roman_urdu:'Roman Urdu', urdu:'اردو', english:'English' };
+
+// ── Tab switcher ────────────────────────────────────────────────────────────
+function showTab(tab, btn) {
+  document.getElementById('tab-conversations').style.display = tab === 'conversations' ? 'block' : 'none';
+  document.getElementById('tab-cards').style.display         = tab === 'cards'         ? 'block' : 'none';
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── Load all history ────────────────────────────────────────────────────────
+async function loadHistory() {
+  const res = await apiGetAllHistory();
+
+  if (!res || !res.ok) {
+    document.getElementById('convList').innerHTML =
+      '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Could not load history.</div></div>';
+    return;
+  }
+
+  renderConversations(res.data.conversations || []);
+  renderCards(res.data.doctor_cards || []);
+}
+
+// ── Render conversations ────────────────────────────────────────────────────
+function renderConversations(convos) {
+  const el = document.getElementById('convList');
+
+  if (convos.length === 0) {
+    el.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">💬</div>
+        <div class="empty-text">Abhi tak koi baat nahi hui.<br>Kisi bhi flow se shuru karein.</div>
+        <button class="btn-start" onclick="window.location.href='/woman'">Shuru Karein →</button>
+      </div>`;
+    return;
+  }
+
+  el.innerHTML = '';
+  convos.forEach(conv => {
+    const card = document.createElement('div');
+    card.className = 'conv-card';
+
+    const msgCount = conv.messages ? conv.messages.length : 0;
+    const date     = new Date(conv.updated_at).toLocaleDateString('en-PK', {
+      day:'numeric', month:'short', year:'numeric'
+    });
+
+    card.innerHTML = `
+      <div class="conv-icon">${flowIcons[conv.flow] || '💬'}</div>
+      <div class="conv-info">
+        <div class="conv-title">${conv.title || 'Conversation'}</div>
+        <div class="conv-meta">
+          <span class="conv-badge ${conv.flow}">${flowNames[conv.flow] || conv.flow}</span>
+          <span class="conv-lang">${langNames[conv.language] || conv.language}</span>
+          <span class="conv-msgs">${msgCount} messages</span>
+          <span class="conv-date">${date}</span>
+        </div>
+      </div>
+      <div class="conv-arrow">›</div>
+      <button class="btn-delete" onclick="deleteConv(event, ${conv.id})" title="Delete">🗑️</button>
+    `;
+
+    // Click to resume conversation
+    card.addEventListener('click', (e) => {
+      if (e.target.classList.contains('btn-delete')) return;
+      // Save conversation ID and go to flow
+      localStorage.setItem('sh_resume_conv', conv.id);
+      window.location.href = `/${conv.flow}`;
+    });
+
+    el.appendChild(card);
+  });
+}
+
+// ── Render doctor cards ─────────────────────────────────────────────────────
+function renderCards(cards) {
+  const el = document.getElementById('cardList');
+
+  if (cards.length === 0) {
+    el.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🩺</div>
+        <div class="empty-text">Abhi tak koi doctor card nahi bana.<br>Doctor flow se card generate karein.</div>
+        <button class="btn-start" onclick="window.location.href='/doctor'">Card Banayein →</button>
+      </div>`;
+    return;
+  }
+
+  el.innerHTML = '';
+  cards.forEach(card => {
+    const item = document.createElement('div');
+    item.className = 'card-item';
+
+    const date = new Date(card.created_at).toLocaleDateString('en-PK', {
+      day:'numeric', month:'short', year:'numeric'
+    });
+    const preview = card.symptoms.length > 60
+      ? card.symptoms.substring(0, 60) + '...'
+      : card.symptoms;
+
+    item.innerHTML = `
+      <div class="card-icon">🩺</div>
+      <div class="card-info">
+        <div class="card-title">${preview}</div>
+        <div class="card-meta">${langNames[card.language] || card.language} · ${date}</div>
+      </div>
+      <div class="card-arrow">›</div>
+    `;
+
+    item.onclick = () => window.location.href = `/card/${card.id}`;
+    el.appendChild(item);
+  });
+}
+
+// ── Delete conversation ─────────────────────────────────────────────────────
+async function deleteConv(e, convId) {
+  e.stopPropagation();
+  if (!confirm('Yeh conversation delete karein?')) return;
+
+  const res = await apiDeleteConversation(convId);
+  if (res && res.ok) loadHistory();
+}
+
+// ── Init ────────────────────────────────────────────────────────────────────
+loadHistory();
+</script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SamajhHer — Create Account</title>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #dce8f0 0%, #e8ddf0 50%, #f0e0e8 100%);
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .blob1 { position:fixed; top:-60px; left:-60px; width:280px; height:280px; border-radius:50%; background:rgba(170,150,220,0.3); filter:blur(24px); pointer-events:none; z-index:0; }
+    .blob2 { position:fixed; bottom:-40px; right:-40px; width:240px; height:240px; border-radius:50%; background:rgba(240,160,180,0.28); filter:blur(20px); pointer-events:none; z-index:0; }
+
+    .register-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #fff;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.12);
+      width: 100%; max-width: 900px;
+      position: relative; z-index: 1;
+      min-height: 580px;
+    }
+
+    .reg-left {
+      background: linear-gradient(160deg, #c8e4f4 0%, #d8ccee 50%, #f0c8d8 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 48px 36px; position: relative; overflow: hidden;
+    }
+    .reg-left-arch {
+      position: absolute;
+      width: 280px; height: 320px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50% 50% 0 0 / 60% 60% 0 0;
+      bottom: 0; left: 50%; transform: translateX(-50%);
+    }
+    .reg-left-logo {
+      font-size: 28px; font-weight: 700;
+      color: #fff; text-align: center;
+      margin-bottom: 12px; position: relative; z-index: 2;
+    }
+    .reg-left-logo span { color: #fde8f0; }
+    .reg-left-tagline {
+      font-size: 13px; color: rgba(255,255,255,0.85);
+      text-align: center; line-height: 1.7;
+      position: relative; z-index: 2; max-width: 220px;
+    }
+    .reg-left-urdu {
+      font-family: 'Noto Nastaliq Urdu', serif;
+      font-size: 16px; color: rgba(255,255,255,0.9);
+      direction: rtl; text-align: center;
+      margin-top: 16px; display: block;
+      position: relative; z-index: 2;
+    }
+    .reg-left-img {
+      width: 160px; margin-top: 24px;
+      position: relative; z-index: 2; opacity: 0.9;
+    }
+
+    .reg-right {
+      padding: 44px 44px;
+      display: flex; flex-direction: column;
+      justify-content: center;
+    }
+    .form-title {
+      font-size: 24px; font-weight: 700;
+      color: #1a1530; margin-bottom: 6px;
+    }
+    .form-sub {
+      font-size: 13px; color: #9080a8;
+      margin-bottom: 24px;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      font-size: 12px; font-weight: 600;
+      color: #5a4870; display: block; margin-bottom: 7px;
+    }
+    .form-input {
+      width: 100%; padding: 11px 16px;
+      border: 1.5px solid #e0d8f0;
+      border-radius: 12px; font-size: 14px;
+      font-family: 'Poppins', sans-serif;
+      color: #1a1530; background: #faf8ff;
+      transition: border-color 0.2s; outline: none;
+    }
+    .form-input:focus { border-color: #d94f7a; background: #fff; }
+    .form-input::placeholder { color: #c0b8d0; }
+
+    /* Language selector in register */
+    .lang-select-label {
+      font-size: 12px; font-weight: 600;
+      color: #5a4870; display: block; margin-bottom: 8px;
+    }
+    .lang-select-row { display: flex; gap: 8px; margin-bottom: 18px; }
+    .lang-select-btn {
+      font-size: 12px; font-weight: 600;
+      padding: 7px 16px; border-radius: 20px;
+      border: 1.5px solid #e0d0ec;
+      color: #8070a0; background: #f8f4ff;
+      cursor: pointer; transition: all 0.2s;
+      font-family: 'Poppins', sans-serif;
+    }
+    .lang-select-btn.active {
+      background: #d94f7a; color: #fff; border-color: #d94f7a;
+    }
+
+    .btn-form {
+      width: 100%; padding: 13px;
+      background: #d94f7a; color: #fff;
+      border: none; border-radius: 12px;
+      font-size: 15px; font-weight: 700;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer; margin-top: 4px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(217,79,122,0.3);
+    }
+    .btn-form:hover { background: #5b4fcf; box-shadow: 0 4px 16px rgba(91,79,207,0.3); }
+    .btn-form:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .form-switch {
+      text-align: center; font-size: 13px;
+      color: #9080a8; margin-top: 18px;
+    }
+    .form-switch a { color: #d94f7a; font-weight: 600; text-decoration: none; }
+    .form-switch a:hover { color: #5b4fcf; }
+
+    .alert {
+      padding: 12px 16px; border-radius: 10px;
+      font-size: 13px; margin-bottom: 14px; display: none;
+    }
+    .alert.show { display: block; }
+    .alert-error   { background: #fdeef3; color: #c0304a; border: 1px solid rgba(192,48,74,0.2); }
+    .alert-success { background: #eef5f0; color: #2d7a4a; border: 1px solid rgba(45,122,74,0.2); }
+
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.7s linear infinite; vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: #9080a8; font-size: 12px; text-decoration: none;
+      margin-bottom: 20px; transition: color 0.2s;
+    }
+    .back-link:hover { color: #d94f7a; }
+  </style>
+</head>
+<body>
+
+<div class="blob1"></div>
+<div class="blob2"></div>
+
+<div class="register-wrap">
+
+  <!-- Left decorative panel -->
+  <div class="reg-left">
+    <div class="reg-left-arch"></div>
+    <div class="reg-left-logo">Samajh<span>Her</span></div>
+    <div class="reg-left-tagline">
+      Apna account banayein — yeh bilkul free hai
+      aur aapki privacy hamesha protect rahegi.
+    </div>
+    <span class="reg-left-urdu">آگاہی پہلے، حل بعد میں</span>
+    <img
+      class="reg-left-img"
+      src="/static/images/woman.png"
+      alt="Woman"
+      onerror="this.style.display='none'"
+    />
+  </div>
+
+  <!-- Right form -->
+  <div class="reg-right">
+    <a href="/" class="back-link">← Back to home</a>
+    <div class="form-title">Create Account 🌸</div>
+    <div class="form-sub">Join SamajhHer — it's free and private</div>
+
+    <div id="alert" class="alert alert-error"></div>
+
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+      <input id="name" type="text" class="form-input" placeholder="Aapka naam"/>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <input id="email" type="email" class="form-input" placeholder="your@email.com"/>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input id="password" type="password" class="form-input" placeholder="••••••••"/>
+    </div>
+
+    <!-- Language preference -->
+    <label class="lang-select-label">Preferred Language</label>
+    <div class="lang-select-row" id="langSelectRow">
+      <button class="lang-select-btn active" onclick="selectLang('roman_urdu', this)">Roman Urdu</button>
+      <button class="lang-select-btn"        onclick="selectLang('urdu', this)">اردو</button>
+      <button class="lang-select-btn"        onclick="selectLang('english', this)">English</button>
+    </div>
+
+    <button class="btn-form" id="registerBtn" onclick="handleRegister()">
+      Create Account
+    </button>
+
+    <div class="form-switch">
+      Already have an account? <a href="/login">Sign in here</a>
+    </div>
+  </div>
+
+</div>
+
+<script src="/static/js/api.js"></script>
+<script>
+  let selectedLang = 'roman_urdu';
+
+  function selectLang(lang, el) {
+    selectedLang = lang;
+    document.querySelectorAll('.lang-select-btn')
+      .forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // Override handleRegister to include language
+  async function handleRegister() {
+    const name     = document.getElementById('name').value.trim();
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const btn      = document.getElementById('registerBtn');
+
+    if (!name || !email || !password) {
+      showAlert('alert', 'Please fill all fields.'); return;
+    }
+    if (password.length < 6) {
+      showAlert('alert', 'Password must be at least 6 characters.'); return;
+    }
+
+    btn.disabled  = true;
+    btn.innerHTML = '<span class="spinner"></span> Creating...';
+
+    const res = await apiRegister(name, email, password, selectedLang);
+
+    btn.disabled  = false;
+    btn.innerHTML = 'Create Account';
+
+    if (!res || !res.ok) {
+      showAlert('alert', res?.data?.error || 'Registration failed.'); return;
+    }
+
+    showAlert('alert', 'Account created! Redirecting to login...', 'success');
+    setTimeout(() => window.location.href = '/login', 1500);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleRegister();
+  });
+</script>
+</body>
+</html>

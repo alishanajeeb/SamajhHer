@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SamajhHer — Kya Ho Raha Hai?</title>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #dce8f0 0%, #e8ddf0 50%, #f0e0e8 100%);
+      min-height: 100vh; margin: 0;
+    }
+    .page-wrap {
+      max-width: 1100px; margin: 0 auto;
+      padding: 20px 20px 40px;
+    }
+    .chat-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 20px; align-items: start;
+    }
+
+    /* ── CHAT BOX ── */
+    .chat-box {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 32px rgba(180,120,160,0.1);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      height: calc(100vh - 120px);
+    }
+    .chat-header {
+      padding: 18px 22px;
+      border-bottom: 1px solid #f5eef8;
+      display: flex; align-items: center;
+      gap: 14px; background: #fdf8ff;
+    }
+    .chat-header-icon { font-size: 28px; }
+    .chat-header-info { flex: 1; }
+    .chat-header-title {
+      font-size: 16px; font-weight: 700;
+      color: #1a1530; margin-bottom: 2px;
+    }
+    .chat-header-sub { font-size: 12px; color: #9080a8; }
+
+    /* Language switcher in header */
+    .lang-sw {
+      display: flex; gap: 4px;
+      background: #f5f0fc; border: 1px solid #e8e0f8;
+      border-radius: 20px; padding: 3px;
+    }
+    .lsb {
+      font-size: 11px; font-weight: 600;
+      padding: 4px 12px; border-radius: 16px;
+      border: none; background: transparent;
+      color: #9080a8; cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.2s;
+    }
+    .lsb.active { background: #d94f7a; color: #fff; }
+
+    /* Messages area */
+    .chat-messages {
+      flex: 1; overflow-y: auto;
+      padding: 20px; display: flex;
+      flex-direction: column; gap: 16px;
+    }
+    .msg { max-width: 78%; animation: msgIn 0.3s ease forwards; }
+    @keyframes msgIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    .msg.ai   { align-self: flex-start; }
+    .msg.user { align-self: flex-end; }
+
+    .msg-bubble {
+      padding: 13px 17px;
+      border-radius: 18px;
+      font-size: 14px; line-height: 1.75;
+    }
+    .msg.ai .msg-bubble {
+      background: #fdf5f8;
+      border: 1px solid #f0e0ea;
+      color: #2d2040;
+      border-bottom-left-radius: 4px;
+    }
+    .msg.user .msg-bubble {
+      background: #d94f7a;
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .msg-time {
+      font-size: 10px; color: #c0b8d0;
+      margin-top: 4px; padding: 0 4px;
+    }
+    .msg.user .msg-time { text-align: right; }
+
+    /* Urdu message styling */
+    .msg-bubble.urdu-msg {
+      font-family: 'Noto Nastaliq Urdu', serif;
+      direction: rtl; text-align: right;
+      line-height: 2.2; font-size: 15px;
+    }
+
+    /* Typing indicator */
+    .typing-wrap { align-self: flex-start; }
+    .typing-bubble {
+      display: flex; gap: 5px;
+      padding: 14px 18px;
+      background: #fdf5f8;
+      border: 1px solid #f0e0ea;
+      border-radius: 18px; border-bottom-left-radius: 4px;
+      width: fit-content;
+    }
+    .td {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #d094b8;
+      animation: tdBounce 1.2s infinite;
+    }
+    .td:nth-child(2) { animation-delay: 0.2s; }
+    .td:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes tdBounce {
+      0%,60%,100%{transform:translateY(0);opacity:0.4}
+      30%{transform:translateY(-6px);opacity:1}
+    }
+
+    /* Input area */
+    .chat-input-area {
+      padding: 16px 20px;
+      border-top: 1px solid #f5eef8;
+      background: #fdf8ff;
+    }
+    .input-row {
+      display: flex; gap: 10px; align-items: flex-end;
+    }
+    .chat-ta {
+      flex: 1; background: #fff;
+      border: 1.5px solid #e8d8f0;
+      border-radius: 14px; padding: 11px 16px;
+      font-size: 14px; font-family: 'Poppins', sans-serif;
+      color: #1a1530; resize: none;
+      min-height: 46px; max-height: 120px;
+      transition: border-color 0.2s; line-height: 1.5;
+    }
+    .chat-ta:focus { outline: none; border-color: #d94f7a; }
+    .chat-ta::placeholder { color: #c0b0d0; }
+
+    .btn-send {
+      background: #d94f7a; color: #fff;
+      border: none; width: 46px; height: 46px;
+      border-radius: 12px; font-size: 20px;
+      cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .btn-send:hover { background: #5b4fcf; transform: scale(1.05); }
+    .btn-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .btn-voice {
+      background: #f3eef8; color: #8b6b9e;
+      border: 1.5px solid #e8d8f0;
+      width: 46px; height: 46px;
+      border-radius: 12px; font-size: 20px;
+      cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .btn-voice:hover { background: #8b6b9e; color: #fff; }
+    .btn-voice.recording {
+      background: #d94f7a; color: #fff;
+      animation: recPulse 1s infinite;
+    }
+    @keyframes recPulse {
+      0%,100%{box-shadow:0 0 0 0 rgba(217,79,122,0.4)}
+      50%{box-shadow:0 0 0 8px rgba(217,79,122,0)}
+    }
+    .voice-hint {
+      font-size: 11px; color: #c0b0d0;
+      text-align: center; margin-top: 8px;
+    }
+
+    /* ── SIDE PANEL ── */
+    .side-panel {
+      display: flex; flex-direction: column;
+      gap: 14px; position: sticky; top: 84px;
+    }
+    .side-card {
+      background: #fff; border: 1px solid #f0e8f8;
+      border-radius: 16px; padding: 18px;
+      box-shadow: 0 2px 16px rgba(180,120,160,0.08);
+    }
+    .side-card-title {
+      font-size: 11px; font-weight: 700;
+      color: #c0b0d0; text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 12px;
+    }
+    .tip-item {
+      display: flex; gap: 10px;
+      padding: 9px 0; border-bottom: 1px solid #fdf5ff;
+      font-size: 13px; color: #5a4870;
+      align-items: flex-start; line-height: 1.55;
+    }
+    .tip-item:last-child { border-bottom: none; }
+    .tip-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+    .new-chat-btn {
+      width: 100%; padding: 11px;
+      background: #fdf0f5; color: #d94f7a;
+      border: 1.5px solid #f0c8d8;
+      border-radius: 12px; font-size: 13px;
+      font-weight: 600; font-family: 'Poppins', sans-serif;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .new-chat-btn:hover { background: #d94f7a; color: #fff; border-color: #d94f7a; }
+
+    .doctor-card-btn {
+      width: 100%; padding: 11px;
+      background: #f0eeff; color: #5b4fcf;
+      border: 1.5px solid #d8d0f8;
+      border-radius: 12px; font-size: 13px;
+      font-weight: 600; font-family: 'Poppins', sans-serif;
+      cursor: pointer; transition: all 0.2s; margin-top: 8px;
+    }
+    .doctor-card-btn:hover { background: #5b4fcf; color: #fff; border-color: #5b4fcf; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar" style="position:sticky;top:0;z-index:100;background:rgba(253,248,252,0.97);border-bottom:1px solid #f0e8f8;backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:64px;box-shadow:0 2px 16px rgba(180,120,160,0.06)">
+  <a href="/" style="font-size:18px;font-weight:700;color:#d94f7a;text-decoration:none">Samajh<span style="color:#5b4fcf">Her</span></a>
+  <div style="display:flex;gap:6px">
+    <a href="/woman"   style="font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;text-decoration:none;color:#d94f7a;background:#fde8f0">🧕 Kya Ho Raha Hai</a>
+    <a href="/family"  style="font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;text-decoration:none;color:#9080a8">👨‍👩‍👧 Family</a>
+    <a href="/doctor"  style="font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;text-decoration:none;color:#9080a8">🩺 Doctor</a>
+    <a href="/history" style="font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;text-decoration:none;color:#9080a8">📋 History</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span id="nav-user" style="font-size:13px;color:#5a4870;font-weight:500"></span>
+    <button onclick="logout()" style="font-size:12px;font-weight:600;background:transparent;border:1.5px solid #e8d0ec;color:#9080a8;border-radius:20px;padding:6px 16px;cursor:pointer">Logout</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="chat-layout">
+
+    <!-- Chat box -->
+    <div class="chat-box">
+      <div class="chat-header">
+        <div class="chat-header-icon">🧕</div>
+        <div class="chat-header-info">
+          <div class="chat-header-title">Kya Ho Raha Hai?</div>
+          <div class="chat-header-sub" id="headerSub">AI aapki baat sun rahi hai 💙</div>
+        </div>
+        <div class="lang-sw">
+          <button class="lsb active" onclick="switchLang('roman_urdu',this)">Roman</button>
+          <button class="lsb"        onclick="switchLang('urdu',this)">اردو</button>
+          <button class="lsb"        onclick="switchLang('english',this)">Eng</button>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        <!-- Messages injected by JS -->
+      </div>
+
+      <div class="chat-input-area">
+        <div class="input-row">
+          <textarea
+            id="chatInput"
+            class="chat-ta"
+            placeholder="Apni baat yahan likhein..."
+            rows="1"
+            onkeydown="handleKey(event)"
+            oninput="autoResize(this)"
+          ></textarea>
+          <button class="btn-voice" id="voiceBtn" onclick="toggleVoice()" title="Voice input">🎤</button>
+          <button class="btn-send"  id="sendBtn"  onclick="sendMessage()">➤</button>
+        </div>
+        <div class="voice-hint" id="voiceHint">🎤 Press mic to speak in Urdu or English</div>
+      </div>
+    </div>
+
+    <!-- Side panel -->
+    <div class="side-panel">
+
+      <div class="side-card">
+        <div class="side-card-title">💡 Aaj ke Tips</div>
+        <div class="tip-item"><span class="tip-icon">🌙</span>Raat ko kamra thanda rakhein — hot flashes kam honge</div>
+        <div class="tip-item"><span class="tip-icon">🥗</span>Zyada masaledar khane se parhezh karein</div>
+        <div class="tip-item"><span class="tip-icon">🚶‍♀️</span>Roz 20 min ki walk bahut faydemand hai</div>
+        <div class="tip-item"><span class="tip-icon">💧</span>Din mein 8 glass paani zaroor piyein</div>
+      </div>
+
+      <div class="side-card">
+        <button class="new-chat-btn" onclick="startNewChat()">+ Nayi Baat Shuru Karein</button>
+        <button class="doctor-card-btn" onclick="window.location.href='/doctor'">🩺 Doctor Card Banayein</button>
+      </div>
+
+      <div class="side-card">
+        <div class="side-card-title">📋 Yaad Rakhein</div>
+        <div class="tip-item"><span class="tip-icon">💙</span>Yeh burhapa nahi — yeh ek natural change hai</div>
+        <div class="tip-item"><span class="tip-icon">🌸</span>Aap akeli nahi hain — lakho auraten yeh feel karti hain</div>
+        <div class="tip-item"><span class="tip-icon">🩺</span>Doctor se milna hamesha accha idea hai</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/api.js"></script>
+<script src="/static/js/voice.js"></script>
+<script src="/static/js/chat.js"></script>
+<script>
+  // Initialize this page
+  initChat('woman');
+</script>
+</body>
+</html>

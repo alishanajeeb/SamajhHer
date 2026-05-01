@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SamajhHer — Doctor Card</title>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+  <style>
+    body { font-family:'Poppins',sans-serif; background:linear-gradient(135deg,#dce8f0 0%,#e8ddf0 50%,#f0e0e8 100%); min-height:100vh; margin:0; }
+    .page-wrap { max-width:700px; margin:0 auto; padding:32px 20px 60px; }
+
+    .page-title { font-size:24px; font-weight:700; color:#1a1530; margin-bottom:4px; }
+    .page-title span { color:#c4956a; }
+    .page-sub { font-size:14px; color:#9080a8; margin-bottom:28px; }
+
+    /* Action buttons */
+    .action-row {
+      display:flex; gap:10px; margin-bottom:24px;
+      flex-wrap:wrap;
+    }
+    .btn-print {
+      background:#c4956a; color:#fff; border:none;
+      border-radius:12px; padding:11px 24px;
+      font-size:13px; font-weight:700;
+      font-family:'Poppins',sans-serif;
+      cursor:pointer; transition:all 0.2s;
+      display:flex; align-items:center; gap:8px;
+    }
+    .btn-print:hover { background:#5b4fcf; }
+
+    .btn-back {
+      background:#fff; color:#9080a8;
+      border:1.5px solid #e0d8f0;
+      border-radius:12px; padding:10px 22px;
+      font-size:13px; font-weight:600;
+      font-family:'Poppins',sans-serif;
+      cursor:pointer; transition:all 0.2s;
+      text-decoration:none; display:inline-flex;
+      align-items:center; gap:6px;
+    }
+    .btn-back:hover { border-color:#d94f7a; color:#d94f7a; }
+
+    /* Doctor card */
+    .doctor-card {
+      background:#fff;
+      border:2px solid #f0e8d0;
+      border-radius:20px;
+      padding:36px;
+      box-shadow:0 4px 32px rgba(180,140,80,0.1);
+    }
+
+    /* Card header */
+    .dc-header {
+      display:flex; align-items:center;
+      justify-content:space-between;
+      margin-bottom:24px;
+      padding-bottom:20px;
+      border-bottom:2px solid #fdf0e0;
+    }
+    .dc-logo { font-size:22px; font-weight:700; color:#d94f7a; }
+    .dc-logo span { color:#5b4fcf; }
+    .dc-badge {
+      background:#fff8ec; color:#c4956a;
+      border:1.5px solid #f0e0c0;
+      border-radius:20px; padding:5px 16px;
+      font-size:12px; font-weight:700;
+    }
+
+    /* Card content */
+    .dc-content {
+      font-size:14px; line-height:2;
+      color:#2d2040;
+      white-space:pre-wrap;
+    }
+    .dc-content.urdu {
+      font-family:'Noto Nastaliq Urdu',serif;
+      direction:rtl; text-align:right;
+      font-size:16px; line-height:2.4;
+    }
+
+    /* Card footer */
+    .dc-footer {
+      margin-top:28px; padding-top:20px;
+      border-top:1px solid #f5eee0;
+      display:flex; align-items:center;
+      justify-content:space-between;
+      font-size:11px; color:#c0b098;
+    }
+
+    /* Print styles */
+    @media print {
+      body { background:#fff; }
+      .action-row, nav { display:none !important; }
+      .page-wrap { padding:0; max-width:100%; }
+      .doctor-card { box-shadow:none; border:1px solid #ddd; }
+    }
+
+    /* Loading */
+    .loading-wrap {
+      text-align:center; padding:60px;
+      color:#c0b0d0; font-size:14px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar (hidden on print) -->
+<nav style="position:sticky;top:0;z-index:100;background:rgba(255,251,245,0.97);border-bottom:1px solid #f5e8d0;backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:64px;box-shadow:0 2px 16px rgba(180,140,80,0.06)">
+  <a href="/" style="font-size:18px;font-weight:700;color:#d94f7a;text-decoration:none">Samajh<span style="color:#5b4fcf">Her</span></a>
+  <div style="display:flex;gap:6px">
+    <a href="/doctor"  style="font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;text-decoration:none;color:#9080a8">🩺 Doctor Flow</a>
+    <a href="/history" style="font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;text-decoration:none;color:#9080a8">📋 History</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span id="nav-user" style="font-size:13px;color:#5a4870;font-weight:500"></span>
+    <button onclick="logout()" style="font-size:12px;font-weight:600;background:transparent;border:1.5px solid #e8d0ec;color:#9080a8;border-radius:20px;padding:6px 16px;cursor:pointer">Logout</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <div class="page-title">Doctor <span>Card</span></div>
+  <div class="page-sub">Yeh card apne doctor ko dikhayein ya print karein</div>
+
+  <!-- Action buttons -->
+  <div class="action-row">
+    <button class="btn-print" onclick="window.print()">
+      🖨️ Print / Save as PDF
+    </button>
+    <a href="/history" class="btn-back">← History par wapas jayein</a>
+    <a href="/doctor"  class="btn-back">🩺 Naya Card Banayein</a>
+  </div>
+
+  <!-- Card content -->
+  <div id="cardWrap">
+    <div class="loading-wrap">
+      <div>Card load ho rahi hai...</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="/static/js/api.js"></script>
+<script>
+requireAuth();
+setNavUser();
+
+async function loadCard() {
+  // Get card ID from URL
+  const pathParts = window.location.pathname.split('/');
+  const cardId    = pathParts[pathParts.length - 1];
+
+  if (!cardId || isNaN(cardId)) {
+    document.getElementById('cardWrap').innerHTML =
+      '<div class="loading-wrap">Invalid card ID.</div>';
+    return;
+  }
+
+  const res = await apiGetCard(parseInt(cardId));
+
+  if (!res || !res.ok) {
+    document.getElementById('cardWrap').innerHTML =
+      '<div class="loading-wrap">Card not found or access denied.</div>';
+    return;
+  }
+
+  const card    = res.data.card;
+  const isUrdu  = card.language === 'urdu';
+  const date    = new Date(card.created_at).toLocaleDateString('en-PK', {
+    day:'numeric', month:'long', year:'numeric'
+  });
+
+  document.getElementById('cardWrap').innerHTML = `
+    <div class="doctor-card">
+      <div class="dc-header">
+        <div class="dc-logo">Samajh<span>Her</span></div>
+        <div class="dc-badge">🩺 Doctor Visit Card</div>
+      </div>
+      <div class="dc-content ${isUrdu ? 'urdu' : ''}">${card.card_content}</div>
+      <div class="dc-footer">
+        <span>Generated by SamajhHer · ${date}</span>
+        <span>samajhher.pk</span>
+      </div>
+    </div>
+  `;
+}
+
+loadCard();
+</script>
+</body>
+</html>
