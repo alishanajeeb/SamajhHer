@@ -1,5 +1,5 @@
 // ── SamajhHer — Central API Layer ─────────────────────────────────────────
-const API = '/https://samajhher.onrender.comapi';
+const API = '/api';
 
 // ── Token & user helpers ───────────────────────────────────────────────────
 const getToken  = ()      => localStorage.getItem('sh_token');
