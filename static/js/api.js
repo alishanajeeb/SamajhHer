@@ -1,7 +1,5 @@
-// ── SamajhHer — Central API Layer ─────────────────────────────────────────
 const API = '/api';
 
-// ── Token & user helpers ───────────────────────────────────────────────────
 const getToken  = ()      => localStorage.getItem('sh_token');
 const getUser   = ()      => { const u = localStorage.getItem('sh_user'); return u ? JSON.parse(u) : null; };
 const getLang   = ()      => localStorage.getItem('sh_lang') || 'roman_urdu';
@@ -19,7 +17,6 @@ const saveLang  = (lang)  => localStorage.setItem('sh_lang', lang);
 function logout() { clearAuth(); window.location.href = '/'; }
 function requireAuth() { if (!getToken()) window.location.href = '/login'; }
 
-// ── Core request ───────────────────────────────────────────────────────────
 async function req(method, endpoint, body = null, auth = true) {
     const headers = { 'Content-Type': 'application/json' };
     if (auth) {
@@ -40,13 +37,11 @@ async function req(method, endpoint, body = null, auth = true) {
     }
 }
 
-// ── Auth ───────────────────────────────────────────────────────────────────
 const apiRegister = (name, email, password, language) =>
     req('POST', '/auth/register', { name, email, password, language }, false);
 const apiLogin = (email, password) =>
     req('POST', '/auth/login', { email, password }, false);
 
-// ── Chat ───────────────────────────────────────────────────────────────────
 const apiStartConversation = (flow, language) =>
     req('POST', '/chat/start', { flow, language });
 const apiSendMessage = (conversation_id, message) =>
@@ -58,7 +53,6 @@ const apiGetConversation = (id) =>
 const apiDeleteConversation = (id) =>
     req('DELETE', `/chat/conversations/${id}`);
 
-// ── Doctor cards ───────────────────────────────────────────────────────────
 const apiGenerateCard = (symptoms, duration, severity, language) =>
     req('POST', '/card/generate', { symptoms, duration, severity, language });
 const apiGetMyCards = () =>
@@ -66,11 +60,9 @@ const apiGetMyCards = () =>
 const apiGetCard = (id) =>
     req('GET', `/card/${id}`);
 
-// ── History ────────────────────────────────────────────────────────────────
 const apiGetAllHistory = () =>
     req('GET', '/history/all');
 
-// ── Helpers ────────────────────────────────────────────────────────────────
 function showAlert(id, msg, type = 'error') {
     const el = document.getElementById(id);
     if (!el) return;
